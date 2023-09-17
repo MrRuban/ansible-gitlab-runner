@@ -402,12 +402,12 @@
 - name:  "{{ runn_name_prefix }} Set additional services"
   blockinfile:
     dest: "{{ temp_runner_config.path }}"
-    content: "{{ lookup('template', 'config.runners.docker.services.j2') if gitlab_runner.docker_services is defined }}"
-    state: "{{ 'present' if gitlab_runner.docker_services is defined else 'absent' }}"
+    content: "{{ lookup('template', 'config.runners.docker.services.j2') }}"
+    state: 'present'
     marker: "# {mark} runners.docker.services"
     insertafter: EOF
   check_mode: no
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  when: gitlab_runner.docker_services is defined 
   notify:
   - restart_gitlab_runner
   - restart_gitlab_runner_macos
